@@ -1,10 +1,16 @@
 document.addEventListener("DOMContentLoaded", (_event) => {
+  console.log('domcontentloaded');
+
   // Connect to socket.io
   const socket = io(); // automatically tries to connect on same port app was served from
   const username = document.getElementById("uname").innerText;
   const form = document.getElementById("chatForm");
   const messages = document.getElementById("messages");
   const messageToSend = document.getElementById("txt");
+
+  socket.emit("welcome", username);
+  socket.emit("join", username);
+
   form.addEventListener("submit", (event) => {
     socket.emit("message", {
       user: username,
@@ -16,8 +22,40 @@ document.addEventListener("DOMContentLoaded", (_event) => {
 
   // append the chat text message
   socket.on("message", (msg) => {
+    console.log("script/message");
     const message = document.createElement("li");
     message.innerHTML = `<strong>${msg.user}</strong>: ${msg.message}`;
+    message
     messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
   });
+
+  // new user enter chatroom
+  socket.on("welcome", (user) => {
+    console.log("script/welcome");
+    const message = document.createElement("li");
+    message.innerHTML = `<strong>BlooChatApp</strong>: Welcome ${user.username}!`;
+    console.log(message);
+    messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
+    const displayUsers = document.createElement("li");
+    const allUsers = user.users.join(',');
+    if (allUsers === '') {
+      displayUsers.innerHTML = `<strong style="color:green">BlooChatApp</strong>: Unfortunately no one is online right now...`;
+    } else {
+      displayUsers.innerHTML = `<strong style="color:green">BlooChatApp</strong>: ${allUsers} is online~`;
+    }
+    messages.appendChild(displayUsers);
+    messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
+  });
+
+  socket.on("join", (user) => {
+    const message = document.createElement("li");
+    message.innerHTML = `<strong>${user}</strong> has joined the chat!`;
+    messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
+  });
+
+  socket.on("exit", ())
 });
+

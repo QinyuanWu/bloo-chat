@@ -20,14 +20,27 @@ app.get("/", (req, res) => {
 
 app.get("/chatroom", (req, res) => {
   res.render("chatroom.njk", { uname: req.query.uname });
+
 });
+
+const users = [];
 
 io.on("connection", function (socket) {
   socket.on("message", (msg) => {
+    console.log('index');
     debug(`${msg.user}: ${msg.message}`);
     //Broadcast the message to everyone
     io.emit("message", msg);
   });
+  
+  socket.on("welcome", (username) => {
+    socket.emit("welcome", {
+      username,
+      users,
+    });
+    users.push(username);
+  });
+
 });
 
 http.listen(port, () => {
