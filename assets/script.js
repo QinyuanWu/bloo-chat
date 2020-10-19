@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", (_event) => {
   const messages = document.getElementById("messages");
   const messageToSend = document.getElementById("txt");
 
+  //display welcome message and notify other users
   socket.emit("welcome", username);
   socket.emit("join", username);
 
@@ -34,13 +35,13 @@ document.addEventListener("DOMContentLoaded", (_event) => {
   socket.on("welcome", (user) => {
     console.log("script/welcome");
     const message = document.createElement("li");
-    message.innerHTML = `<strong>BlooChatApp</strong>: Welcome ${user.username}!`;
+    message.innerHTML = `<strong>BlooChatApp</strong>: Welcome ${user.username}!`; //display welcome message
     console.log(message);
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
     const displayUsers = document.createElement("li");
     const allUsers = user.users.join(',');
-    if (allUsers === '') {
+    if (allUsers === '') { //display users' names that are online
       displayUsers.innerHTML = `<p style="color:green"><strong>BlooChatApp</strong>: Unfortunately no one is online right now...</p>`;
     } else {
       displayUsers.innerHTML = `<p style="color:green"><strong><strong>BlooChatApp</strong>: ${allUsers} is online~</p>`;
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", (_event) => {
     messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
   });
 
+  //notify all users in the chat that a user has entered
   socket.on("join", (user) => {
     const message = document.createElement("li");
     message.innerHTML = `<p style="color:green"><strong>BlooChatApp</strong>: <strong>${user}</strong> has joined the chat!</p>`;
@@ -56,6 +58,7 @@ document.addEventListener("DOMContentLoaded", (_event) => {
     messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
   });
 
+  //notify all users in the chat that a user has disconnected
   socket.on("exit", (user) => {
     const message = document.createElement("li");
     message.innerHTML = `<p style="color:red"><strong>BlooChatApp</strong>: <strong>${user}</strong> has left the chat</p>`;
