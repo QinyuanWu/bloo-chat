@@ -24,6 +24,7 @@ app.get("/chatroom", (req, res) => {
 });
 
 const users = [];
+const ids = [];
 
 io.on("connection", function (socket) {
   socket.on("message", (msg) => {
@@ -39,10 +40,22 @@ io.on("connection", function (socket) {
       users,
     });
     users.push(username);
+    ids.push({id:socket.id, name:username});
   });
-  
+
   socket.on("join",(username) => {
     socket.broadcast.emit("join", username);
+  });
+
+  socket.on("disconnect", () => {
+    const index = ids.findIndex(element => element.id === socket.id);
+    console.log(socket.id);
+    console.log(ids);
+    const username = ids[index].name;
+    socket.broadcast.emit("exit", username);
+    ids.splice(index, 1); //delete the disconnected user in ids array
+    const userIndex = users.findIndex(element => element === username);
+    users.splice(userIndex, 1); //delete the disconnected user in users array
   });
 });
 

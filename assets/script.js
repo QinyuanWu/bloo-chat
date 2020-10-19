@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", (_event) => {
     const displayUsers = document.createElement("li");
     const allUsers = user.users.join(',');
     if (allUsers === '') {
-      displayUsers.innerHTML = `<strong style="color:green">BlooChatApp</strong>: Unfortunately no one is online right now...`;
+      displayUsers.innerHTML = `<p style="color:green"><strong>BlooChatApp</strong>: Unfortunately no one is online right now...</p>`;
     } else {
-      displayUsers.innerHTML = `<strong style="color:green">BlooChatApp</strong>: ${allUsers} is online~`;
+      displayUsers.innerHTML = `<p style="color:green"><strong><strong>BlooChatApp</strong>: ${allUsers} is online~</p>`;
     }
     messages.appendChild(displayUsers);
     messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
@@ -51,11 +51,16 @@ document.addEventListener("DOMContentLoaded", (_event) => {
 
   socket.on("join", (user) => {
     const message = document.createElement("li");
-    message.innerHTML = `<strong>${user}</strong> has joined the chat!`;
+    message.innerHTML = `<p style="color:green"><strong>BlooChatApp</strong>: <strong>${user}</strong> has joined the chat!</p>`;
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
   });
 
-  socket.on("exit", ())
+  socket.on("exit", (user) => {
+    const message = document.createElement("li");
+    message.innerHTML = `<p style="color:red"><strong>BlooChatApp</strong>: <strong>${user}</strong> has left the chat</p>`;
+    messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight; //auto-scroll when text overflow
+  });
 });
 
