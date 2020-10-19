@@ -32,7 +32,7 @@ io.on("connection", function (socket) {
     //Broadcast the message to everyone
     io.emit("message", msg);
   });
-  
+
   socket.on("welcome", (username) => {
     socket.emit("welcome", {
       username,
@@ -40,7 +40,10 @@ io.on("connection", function (socket) {
     });
     users.push(username);
   });
-
+  
+  socket.on("join",(username) => {
+    socket.broadcast.emit("join", username);
+  });
 });
 
 http.listen(port, () => {
