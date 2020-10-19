@@ -48,7 +48,7 @@ form button {
   padding: 0;
   padding-bottom: 80px;
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
   overflow-x: hidden;
 }
 
